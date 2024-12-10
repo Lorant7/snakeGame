@@ -5,37 +5,106 @@ Snake::Snake(int length)
     // Initialize snake's values and allocate memory for the body.
     this->length = length;
     this->direction = 0;
-    // Allocate the 2D array for the snake's body
-    this->body = new int *[length];
-    for (int i = 0; i < length; i++)
+    this->head = new BodyPart(5, 11, 0);
+
+    BodyPart *current = this->head;
+    for (int i = 1; i < length; i++)
     {
-        body[i] = new int[3];
+        BodyPart *temp = new BodyPart(5 + i, 11, 0, this->head);
+        current->setPrev(temp);
+        temp = current;
     }
 
-    /*
-    SNAKE FORMAT:
-    Each element in snake is a body part.
-    Each body part has the row, column, and direction: [r,c,d].
-    The first array in snake is the head and the second is the tail ([Head, Tail, Body, Body, ..., Body]).
-    Directions: up=0, right=1, down=2, left=3
-    */
+    this->tail = current;
+}
 
-    // INITIALIZE SNAKE'S BODY
+void Snake::printSnake()
+{
+    this->head->printPart();
+}
 
-    // Head
-    body[0][0] = 5;
-    body[0][1] = 11;
-    body[0][2] = 0;
+// void Snake::draw(int **snake, int len, int direction)
+// {
+//     erase();
+//     drawBoard();
+//     for (int r = 0; r < len; r++)
+//     {
+//         if (r == 0)
+//         {
+//             mvprintw(*(*(snake + r)), *(*(snake + r) + 1), "^");
+//         }
+//         else if (r == 1)
+//         {
+//             mvprintw(*(*(snake + r)), *(*(snake + r) + 1), "T");
+//         }
+//         else
+//         {
+//             mvprintw(*(*(snake + r)), *(*(snake + r) + 1), "|");
+//         }
+//     }
+//     refresh();
+//     curs_set(0);
+//     return;
+// }
 
-    // Tail
-    body[1][0] = 8;
-    body[1][1] = 11;
-    body[1][2] = 0;
+// void Snake::step(int **snake, int len, int direction)
+// {
+//     int row_diff = 0;
+//     int col_diff = 0;
 
-    for (int r = 2; r < length; r++)
-    {
-        body[r][0] = 4 + r;
-        body[r][1] = 11;
-        body[r][2] = 0;
-    }
+//     if (direction == 0)
+//     {
+//         row_diff = -1;
+//     }
+//     else if (direction == 1)
+//     {
+//         col_diff = 1;
+//     }
+//     else if (direction == 2)
+//     {
+//         row_diff = 1;
+//     }
+//     else
+//     {
+//         col_diff = -1;
+//     }
+
+//     for (int i = 0; i < len; i++)
+//     {
+//         snake[i][0] = snake[i][0] + row_diff;
+//         snake[i][1] = snake[i][1] + col_diff;
+//     }
+//     draw(snake, len, direction);
+// }
+
+// // TODO: run this function in a separate thread
+// bool Snake::checkCollision(int **snake, int len)
+// {
+//     int head[2] = {snake[0][0], snake[0][1]};
+
+//     // Check collision with border
+//     if (head[0] == 0 || head[0] == BOARD_WIDTH - 1)
+//     {
+//         return true;
+//     }
+//     else if (head[1] == 0 || head[1] == BOARD_LENGTH - 1)
+//     {
+//         return true;
+//     }
+
+//     // Check collision with body
+//     for (int i = 1; i < len; i++)
+//     {
+//         if (head[0] == snake[i][0] && head[1] == snake[i][1])
+//         {
+//             return true;
+//         }
+//     }
+
+//     return false;
+// }
+
+Snake::~Snake()
+{
+    delete this->head;
 }

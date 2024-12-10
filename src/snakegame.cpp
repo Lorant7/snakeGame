@@ -1,6 +1,8 @@
-#include <curses.h>
+// #include <curses.h>
 #include <iostream>
 #include <csignal>
+
+#include "snake.h"
 
 #define DELAYSIZE 200
 #define BOARD_LENGTH 18
@@ -13,92 +15,96 @@ bool checkCollision(int **snake, int len);
 
 int main()
 {
-    initscr();
-    nodelay(stdscr, TRUE);
-    noecho();
-    keypad(stdscr, TRUE); // This enables the user to use the arrows
-    curs_set(0);          // Hide the cursor
+    Snake *s = new Snake(4);
+    s->printSnake();
+    delete s;
 
-    // Directions: up=0, right=1, down=2, left=3
-    int snake_dir = 0;
-    int num_numbody_parts = 4;
+    // initscr();
+    // nodelay(stdscr, TRUE);
+    // noecho();
+    // keypad(stdscr, TRUE); // This enables the user to use the arrows
+    // curs_set(0);          // Hide the cursor
 
-    // Allocate the 2D array for the snake's body
-    int **snake = new int *[4];
-    for (int i = 0; i < 4; i++)
-    {
-        snake[i] = new int[2];
-    }
-    // Initialize the snake's body
-    // Head
-    snake[0][0] = 5;
-    snake[0][1] = 11;
+    // // Directions: up=0, right=1, down=2, left=3
+    // int snake_dir = 0;
+    // int num_numbody_parts = 4;
 
-    // Tail
-    snake[1][0] = 8;
-    snake[1][1] = 11;
+    // // Allocate the 2D array for the snake's body
+    // int **snake = new int *[4];
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     snake[i] = new int[2];
+    // }
+    // // Initialize the snake's body
+    // // Head
+    // snake[0][0] = 5;
+    // snake[0][1] = 11;
 
-    for (int r = 2; r < num_numbody_parts; r++)
-    {
-        // Each body part has the row, column, and direction
-        // [r,c, d]
-        // The first array in snake is the head and the second is the tail
-        // [Head, Tail, Body, Body, ..., Body]
-        snake[r][0] = 4 + r;
-        snake[r][1] = 11;
-        }
+    // // Tail
+    // snake[1][0] = 8;
+    // snake[1][1] = 11;
 
-    drawSnake(snake, num_numbody_parts);
-    int ch;
+    // for (int r = 2; r < num_numbody_parts; r++)
+    // {
+    //     // Each body part has the row, column, and direction
+    //     // [r,c, d]
+    //     // The first array in snake is the head and the second is the tail
+    //     // [Head, Tail, Body, Body, ..., Body]
+    //     snake[r][0] = 4 + r;
+    //     snake[r][1] = 11;
+    // }
 
-    // Loop until crtl + c
-    /*
-    Problem with library:
-    When I press the arrow keys I don't get the macros defined for KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT.
-    Instead, I get the macros for:
-        KEY_A2 0x1c2 (UP)
-        KEY_B1 0x1c4 (LEFT)
-        KEY_B3 0x1c6 (RIGHT)
-        KEY_C2 0x1c8 (DOWN)
-    */
-    while (true)
-    {
-        ch = getch();
-        std::cout << ch << std::endl;
-        switch (ch)
-        {
-        case 450:
-            snake_dir = (snake_dir == 2) ? 2 : 0;
-            break;
-        case 454:
-            snake_dir = (snake_dir == 3) ? 3 : 1;
-            break;
-        case 456:
-            snake_dir = (snake_dir == 0) ? 0 : 2;
-            break;
-        case 452:
-            snake_dir = (snake_dir == 1) ? 1 : 3;
-            break;
-        }
+    // drawSnake(snake, num_numbody_parts);
+    // int ch;
 
-        napms(DELAYSIZE);
-        moveSnake(snake, num_numbody_parts, snake_dir);
-        if (checkCollision(snake, num_numbody_parts))
-        {
-            std::cout << "Collided" << std::endl;
-            // raise(SIGINT);
-            // TODO: implement a "lossing window" for when the snake collides
-        }
-    }
+    // // Loop until crtl + c
+    // /*
+    // Problem with library:
+    // When I press the arrow keys I don't get the macros defined for KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT.
+    // Instead, I get the macros for:
+    //     KEY_A2 0x1c2 (UP)
+    //     KEY_B1 0x1c4 (LEFT)
+    //     KEY_B3 0x1c6 (RIGHT)
+    //     KEY_C2 0x1c8 (DOWN)
+    // */
+    // while (true)
+    // {
+    //     ch = getch();
+    //     std::cout << ch << std::endl;
+    //     switch (ch)
+    //     {
+    //     case 450:
+    //         snake_dir = (snake_dir == 2) ? 2 : 0;
+    //         break;
+    //     case 454:
+    //         snake_dir = (snake_dir == 3) ? 3 : 1;
+    //         break;
+    //     case 456:
+    //         snake_dir = (snake_dir == 0) ? 0 : 2;
+    //         break;
+    //     case 452:
+    //         snake_dir = (snake_dir == 1) ? 1 : 3;
+    //         break;
+    //     }
 
-    // Deallocate snake array
-    for (int i = 0; i < num_numbody_parts; i++)
-    {
-        delete[] snake[i];
-    }
-    delete[] snake;
+    //     napms(DELAYSIZE);
+    //     moveSnake(snake, num_numbody_parts, snake_dir);
+    //     if (checkCollision(snake, num_numbody_parts))
+    //     {
+    //         std::cout << "Collided" << std::endl;
+    //         // raise(SIGINT);
+    //         // TODO: implement a "lossing window" for when the snake collides
+    //     }
+    // }
 
-    endwin();
+    // // Deallocate snake array
+    // for (int i = 0; i < num_numbody_parts; i++)
+    // {
+    //     delete[] snake[i];
+    // }
+    // delete[] snake;
+
+    // endwin();
     return 0;
 }
 
