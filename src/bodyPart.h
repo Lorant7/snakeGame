@@ -1,6 +1,7 @@
 #ifndef BODY_PART
 #define BODY_PART
 #include <iostream>
+#include "curses.h"
 // This will be like the nodes in a linked list
 class BodyPart
 {
@@ -14,12 +15,16 @@ public:
     ~BodyPart();
     void setNext(BodyPart *newNext);
     void setPrev(BodyPart *newPrev);
-    void setCoords(int x, int y, int dir);
+    void setCoords(int x, int y, int dir); // TODO: I don't think you need this
+    void setDir(int dir);
     BodyPart *getNext();
     BodyPart *getPrev();
     int getX();
     int getY();
     int getDir();
+
+    void drawPart();
+    void step();
 
     void printPart();
 };
