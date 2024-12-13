@@ -41,17 +41,23 @@ void Snake::printSnake()
 
 void Snake::draw()
 {
-    erase();
-    // drawBoard();
     this->head->drawPart();
-    refresh();
-    curs_set(0);
     return;
 }
 
 void Snake::move()
 {
     this->head->step();
+}
+
+void Snake::grow()
+{
+    for (int i = 0; i < GROWTH_RATE; i++)
+    {
+        BodyPart *newPart = new BodyPart(this->tail->getX(), this->tail->getY(), this->tail->getDir(), this->tail->getNext(), this->tail);
+        newPart->getNext()->setPrev(newPart);
+        this->tail->setNext(newPart);
+    }
 }
 
 Snake::~Snake()

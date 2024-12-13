@@ -2,6 +2,7 @@
 #define SNAKE_H
 // #include "curses.h"
 #include "bodyPart.h"
+#define GROWTH_RATE 1
 
 class Snake
 {
@@ -18,7 +19,7 @@ public:
     void setSnakeDir(int dir);
     void draw();
     void move();
-    bool checkCollision(int **snake, int len);
+    void grow();
 
     void printSnake();
 
