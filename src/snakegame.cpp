@@ -4,6 +4,8 @@
 SnakeGame::SnakeGame()
 {
     this->snake = new Snake(4);
+    this->foodList = (Food *)std::malloc(MAX_FOOD_ON_BOARD * sizeof(Food));
+    this->foodSize = 0;
     snake->draw();
     drawBoard();
 }
@@ -11,6 +13,7 @@ SnakeGame::SnakeGame()
 SnakeGame::~SnakeGame()
 {
     delete this->snake;
+    free(foodList);
 }
 
 Snake *SnakeGame::getSnake() { return this->snake; }
@@ -37,6 +40,7 @@ void SnakeGame::drawFrame()
     snake->move();
     snake->draw();
     drawBoard();
+    drawFoods();
     if (checkCollision())
     {
         std::cout << "collided" << std::endl;
@@ -71,4 +75,30 @@ bool SnakeGame::checkCollision()
     }
 
     return false;
+}
+
+void SnakeGame::addFood()
+{
+    if (foodSize < MAX_FOOD_ON_BOARD)
+    {
+        srand(time(0));
+
+        int randX = (rand() % (BOARD_WIDTH - 1)) + 1;
+        int randY = (rand() % (BOARD_LENGTH - 1)) + 1;
+
+        Food *f = new Food(randX, randY);
+        *(foodList + foodSize * sizeof(Food)) = *f;
+        foodSize++;
+    }
+    return;
+}
+
+void SnakeGame::drawFoods()
+{
+    for (int i = 0; i < foodSize; i++)
+    {
+        Food *f = foodList + i * sizeof(Food);
+        f->drawFood();
+    }
+    return;
 }

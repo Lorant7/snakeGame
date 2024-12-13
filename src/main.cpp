@@ -13,6 +13,7 @@ int main()
     curs_set(0);          // Hide the cursor
 
     int ch;
+    bool addF = true;
 
     // Loop until crtl + c
     /*
@@ -54,6 +55,12 @@ int main()
                 game->getSnake()->setSnakeDir(3);
             }
             break;
+        }
+
+        if (addF)
+        {
+            addF = false;
+            game->addFood();
         }
 
         game->drawFrame();
