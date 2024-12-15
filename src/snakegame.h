@@ -5,6 +5,7 @@
 #include "food.h"
 #include <cstdlib>
 #include <ctime>
+#include <string>
 
 #define BOARD_LENGTH 18
 #define BOARD_WIDTH 28
