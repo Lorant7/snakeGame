@@ -2,8 +2,6 @@
 
 int main()
 {
-    // Snake *s = new Snake(4);
-    // s->printSnake();
     SnakeGame *game = new SnakeGame();
 
     initscr();
@@ -15,7 +13,6 @@ int main()
     int ch;
     bool addF = true;
 
-    // Loop until crtl + c
     /*
     Problem with library:
     When I press the arrow keys I don't get the macros defined for KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT.
@@ -24,32 +21,34 @@ int main()
         KEY_B1 0x1c4 (LEFT)
         KEY_B3 0x1c6 (RIGHT)
         KEY_C2 0x1c8 (DOWN)
+
+    This issue came up only when running the the executable file in the powershell within visual studio.
     */
     while (true)
     {
         ch = getch();
         switch (ch)
         {
-        case 450:
+        case 259:
             if (game->getSnake()->getHead()->getDir() != 2)
             {
                 game->getSnake()->setSnakeDir(0);
             }
 
             break;
-        case 454:
+        case 261:
             if (game->getSnake()->getHead()->getDir() != 3)
             {
                 game->getSnake()->setSnakeDir(1);
             }
             break;
-        case 456:
+        case 258:
             if (game->getSnake()->getHead()->getDir() != 0)
             {
                 game->getSnake()->setSnakeDir(2);
             }
             break;
-        case 452:
+        case 260:
             if (game->getSnake()->getHead()->getDir() != 1)
             {
                 game->getSnake()->setSnakeDir(3);
@@ -63,7 +62,27 @@ int main()
             game->addFood();
         }
 
-        game->drawFrame();
+        if (game->drawFrame())
+        {
+            nodelay(stdscr, FALSE);
+            int keyInput = getch();
+            while (keyInput != 121 && keyInput != 113)
+            {
+                keyInput = getch();
+            }
+            if (keyInput == 121)
+            {
+                nodelay(stdscr, FALSE);
+                free(game);
+                game = new SnakeGame();
+                nodelay(stdscr, TRUE);
+                addF = true;
+            }
+            else if (keyInput == 113)
+            {
+                exit(0);
+            }
+        }
     }
 
     endwin();

@@ -1,4 +1,3 @@
-// #include <curses.h>
 #include "snakegame.h"
 
 SnakeGame::SnakeGame()
@@ -34,8 +33,8 @@ void SnakeGame::drawBoard()
     }
 }
 
-// TODO: the board look glitchy because it appears and disappears. Try to find a way to only erase the snake
-void SnakeGame::drawFrame()
+// When the function returns TRUE, it means that the player lost
+bool SnakeGame::drawFrame()
 {
     napms(DELAYSIZE);
     snake->move();
@@ -45,20 +44,8 @@ void SnakeGame::drawFrame()
     if (checkCollision())
     {
         std::cout << "collided score: " << (this->score) << std::endl;
-        // mvprintw(15, 5, "press key to restart");
         losingScreen();
-        nodelay(stdscr, FALSE);
-        int temp = getch();
-        std::cout << "key pressed: " << temp << std::endl;
-        if (temp == 121)
-        {
-            nodelay(stdscr, TRUE);
-            reset();
-        }
-        else
-        {
-            exit(0);
-        }
+        return TRUE;
     }
     if (checkEat())
     {
@@ -68,6 +55,7 @@ void SnakeGame::drawFrame()
     snake->draw();
     refresh();
     curs_set(0);
+    return FALSE;
 }
 
 // TODO: run this function in a separate thread
@@ -157,19 +145,6 @@ void SnakeGame::drawFoods()
     return;
 }
 
-void SnakeGame::reset()
-{
-    // Free memory to later replace it with new memory
-    delete this->snake;
-    free(foodList);
-
-    // Allocate new memory space
-    this->snake = new Snake(4);
-    this->foodList = (Food *)std::malloc(MAX_FOOD_ON_BOARD * sizeof(Food));
-    foodSize = 0;
-    score = 0;
-}
-
 void SnakeGame::updateScore()
 {
     std::cout << "added score" << std::endl;
@@ -214,21 +189,6 @@ void SnakeGame::losingScreen()
 
     mvprintw(BOARD_LENGTH / 2 - 2, 2, "#########################");
     mvprintw(BOARD_LENGTH / 2 - 1, 2, scoreLine);
-    mvprintw(BOARD_LENGTH / 2, 2, "#  Y:NEW GAME / Q:QUIT  #"); // 21
+    mvprintw(BOARD_LENGTH / 2, 2, "#  Y:NEW GAME / Q:QUIT  #");
     mvprintw(BOARD_LENGTH / 2 + 1, 2, "#########################");
-    nodelay(stdscr, FALSE);
-    int keyInput = getch();
-    // TODO: find a way to clear the que of the key pressing
-    // (because you have to pres q two times for it to quit)
-    // And when you press y it quits
-    std::cout << "key pressed: " << keyInput << std::endl;
-    if (keyInput == 121)
-    {
-        nodelay(stdscr, TRUE);
-        reset();
-    }
-    else if (keyInput == 112)
-    {
-        exit(0);
-    }
 }

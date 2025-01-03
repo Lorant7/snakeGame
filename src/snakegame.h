@@ -28,15 +28,13 @@ public:
     bool checkCollision();
     bool checkEat();
     void drawBoard();
-    void drawFrame();
+    bool drawFrame();
 
     void addFood();
     void drawFoods();
     void updateScore();
 
-    // TODO: implement losing screen
     void losingScreen();
-    void reset();
 
     // TODO: implement storing high scores
     void recordScore();
